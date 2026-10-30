@@ -1,5 +1,5 @@
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing import Optional
 
 
@@ -21,7 +21,14 @@ class TaskCreate(BaseModel):
 
 
 class TaskUpdate(BaseModel):
-    model_config = (ConfigDict(str_strip_whitespace=True))
+    model_config = ConfigDict(str_strip_whitespace=True)
 
     title: Optional[str] = None
     done: Optional[bool] = None
+
+    @field_validator("title")
+    @classmethod
+    def validate_title(cls, v: Optional[str]) -> Optional[str]:
+        if v is not None and not v.strip():
+            raise ValueError("Title cannot be empty")
+        return v

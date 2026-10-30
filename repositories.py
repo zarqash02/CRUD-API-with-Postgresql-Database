@@ -31,9 +31,11 @@ class TaskRepository:
         self.db.refresh(new_task)
         return new_task
 
-    def update_task(self, to_update:Task, data:TaskUpdate) -> Task:
-        to_update.title = data.title
-        to_update.done = data.done
+    def update_task(self, to_update: Task, data: TaskUpdate) -> Task:
+        update_data = data.model_dump(exclude_unset=True)
+        for key, value in update_data.items():
+            setattr(to_update, key, value)
+            
         self.db.commit()
         self.db.refresh(to_update)
         return to_update

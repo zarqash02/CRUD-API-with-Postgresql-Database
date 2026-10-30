@@ -3,6 +3,7 @@ from config import get_settings
 from models import Base
 from repositories import engine
 from routes import router
+import models
 
 settings = get_settings()
 
